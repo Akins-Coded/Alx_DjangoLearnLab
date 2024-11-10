@@ -29,7 +29,7 @@ def query_all_books():
     """
     List all books in the library.
     """
-    books = Book.objects.all()
+    books = books.all()
     print("All books in the library:")
     for book in books:
         print(f"- {book.title} by {book.author.name} (Published: {book.published_date})")
