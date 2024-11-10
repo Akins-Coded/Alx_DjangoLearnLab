@@ -16,4 +16,7 @@ class Library(models.Model):
 class Librarian(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
-    library = models.OneToOneField(Library, on_delete=models.CASCADE, related_name="Librarian") 
+    library = models.OneToOneField(Library, on_delete=models.CASCADE, related_name="Librarian")
+
+    def __str__(self):
+        return self.name 
