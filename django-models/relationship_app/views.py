@@ -4,6 +4,9 @@ from django.views.generic.detail import DetailView
  
 
 # Create your views here.
+def home(request):
+    return render(request, 'relationship_app/home.html')
+
 def list_books(request):
     books = Book.objects.all()
     context = {'book_list' : books}
