@@ -39,15 +39,20 @@ def query_librarian_for_library(library_name):
     Retrieve the librarian for a library.
     """
     try:
-        # Get the Library object by name
+        # Try to get the library object by name
         library = Library.objects.get(name=library_name)
-        librarian = library.librarian  # Assuming one-to-one relationship to Librarian
-        if librarian:
-            print(f"The librarian for {library_name} is {librarian.name}")
-        else:
-            print(f"{library_name} does not have an assigned librarian.")
+        
+        # Try to get the librarian for that library
+        librarian = Librarian.objects.get(library=library)
+        
+        print(f"The librarian for {library_name} is {librarian.name}")
     except Library.DoesNotExist:
+        # Handle case where the library does not exist
         print(f"No library found with the name {library_name}")
+    except Librarian.DoesNotExist:
+        # Handle case where the library exists but has no assigned librarian
+        print(f"{library_name} does not have an assigned librarian.")
+
 
 if __name__ == '__main__':
    main()
