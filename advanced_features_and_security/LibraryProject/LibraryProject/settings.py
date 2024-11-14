@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf.apps.BookshelfConfig',
-    'relationship_app.apps.RelationshipAppConfig'
+    'relationship_app.apps.RelationshipAppConfig',
 ]
 
 MIDDLEWARE = [
@@ -85,7 +85,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -128,3 +127,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 LOGIN_REDIRECT_URL = 'home'  # or wherever you want users to go after login
 LOGOUT_REDIRECT_URL = 'login'  # Redirect to login after logout
+AUTH_USER_MODEL = 'bookshelf.CustomUser'

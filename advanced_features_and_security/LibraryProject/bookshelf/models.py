@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
-
+from django.conf import settings
 # Create your models here.
 class Book(models.Model):
     title = models.CharField (max_length=200)
@@ -13,9 +13,10 @@ class Book(models.Model):
 
     class Meta:
         permissions = (
-            ("can_add_book", "Can add book"),
-            ("can_change_book", "Can change book"),
-            ("can_delete_book", "Can delete book"),
+            ("can_edit", "Can edit"),
+            ("can_create", "Can create"),
+            ("can_delete", "Can delete"),
+            ("can_view", "Can view"),
         )
 
 class CustomUser(AbstractUser):
@@ -24,7 +25,9 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+class UserProfile(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookshelf_profile')
+
 class CustomUserManager(BaseUserManager):
 
     def create_user(self, username, email, password=None, **extra_fields):
