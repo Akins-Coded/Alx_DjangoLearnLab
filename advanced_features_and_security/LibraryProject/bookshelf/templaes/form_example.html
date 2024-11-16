@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Search and User Feedback Form</title>
+    
+</head>
+<body>
+
+    <h1>Book Search and User Feedback</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Search Query Field -->
+        <div>
+            <label for="search_query">Search for a Book</label>
+            <input type="text" name="search_query" id="search_query" placeholder="Enter book title"
+                value="{{ form.search_query.value|default_if_none:'' }}">
+            <!-- Display errors related to search_query -->
+            {% if form.search_query.errors %}
+                <div>
+                    {% for error in form.search_query.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- User's Genre Preference -->
+        <div>
+            <label for="genre">Preferred Genre</label>
+            <select name="genre" id="genre">
+                <option value="fiction" {% if form.genre.value == 'fiction' %}selected{% endif %}>Fiction</option>
+                <option value="non-fiction" {% if form.genre.value == 'non-fiction' %}selected{% endif %}>Non-Fiction</option>
+                <option value="mystery" {% if form.genre.value == 'mystery' %}selected{% endif %}>Mystery</option>
+                <option value="fantasy" {% if form.genre.value == 'fantasy' %}selected{% endif %}>Fantasy</option>
+            </select>
+            <!-- Display errors related to genre -->
+            {% if form.genre.errors %}
+                <div>
+                    {% for error in form.genre.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- User's Rating for Book -->
+        <div>
+            <label>Rate your Experience</label>
+            <div>
+                <input type="radio" name="rating" value="1" {% if form.rating.value == '1' %}checked{% endif %}> 1
+                <input type="radio" name="rating" value="2" {% if form.rating.value == '2' %}checked{% endif %}> 2
+                <input type="radio" name="rating" value="3" {% if form.rating.value == '3' %}checked{% endif %}> 3
+                <input type="radio" name="rating" value="4" {% if form.rating.value == '4' %}checked{% endif %}> 4
+                <input type="radio" name="rating" value="5" {% if form.rating.value == '5' %}checked{% endif %}> 5
+            </div>
+            <!-- Display errors related to rating -->
+            {% if form.rating.errors %}
+                <div>
+                    {% for error in form.rating.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- User's Feedback Comments -->
+        <div>
+            <label for="feedback">Your Feedback</label>
+            <textarea name="feedback" id="feedback" rows="4" placeholder="Leave your comments here">{{ form.feedback.value|default_if_none:'' }}</textarea>
+            <!-- Display errors related to feedback -->
+            {% if form.feedback.errors %}
+                <div>
+                    {% for error in form.feedback.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Newsletter Subscription Checkbox -->
+        <div>
+            <label for="subscribe">Subscribe to Newsletter</label>
+            <input type="checkbox" name="subscribe" id="subscribe" {% if form.subscribe.value %}checked{% endif %}>
+            <label for="subscribe">Yes, I would like to receive newsletters</label>
+            <!-- Display errors related to checkbox -->
+            {% if form.subscribe.errors %}
+                <div>
+                    {% for error in form.subscribe.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">
+            <i class="fas fa-paper-plane"></i> Submit
+        </button>
+    </form>
+
+</body>
+</html>

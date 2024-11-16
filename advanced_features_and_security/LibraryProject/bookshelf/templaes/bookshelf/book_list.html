@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <h1>Book List</h1>
+
+    <!-- Search Form with CSRF Token -->
+    <form method="get" action="{% url 'bookshelf:book_list' %}">
+        {% csrf_token %}
+        <input type="text" name="search_query" placeholder="Search for a book" value="{{ form.search_query.value|default_if_none:'' }}">
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+    </form>
+
+    <!-- Display search results if there are any -->
+    {% if books %}
+        <h2>Search Results</h2>
+        <ul>
+            {% for book in books %}
+                <li>
+                    <strong>{{ book.title }}</strong> by {{ book.author }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No books found matching your search.</p>
+    {% endif %}
+
+    <!-- Display all books if no search query is provided -->
+    {% if not books %}
+        <h2>All Books</h2>
+        <ul>
+            {% for book in books %}
+                <li>
+                    <strong>{{ book.title }}</strong> by {{ book.author }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+</body>
+</html>

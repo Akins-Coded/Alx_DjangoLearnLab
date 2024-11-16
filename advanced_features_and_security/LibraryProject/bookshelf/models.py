@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 # Create your models here.
 class Book(models.Model):
     title = models.CharField (max_length=200)
