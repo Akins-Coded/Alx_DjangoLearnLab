@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import Book
-from .forms import BookSearchForm
+from .forms import ExampleForm, BookSearchForm
 # View to create a book (only users with can_create permission)
 @permission_required('bookshelf.can_create', raise_exception=True)
 def create_book(request):
