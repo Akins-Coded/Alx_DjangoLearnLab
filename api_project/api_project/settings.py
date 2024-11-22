@@ -85,8 +85,8 @@ DATABASES = {
 
 DEFAULT_AUTHENTICATION_CLASSES = [
     'rest_framework.authentication.TokenAuthentication',
-    # ... other authentication classes if needed
-]
+    'rest_framework.permissions.IsAuthenticated'
+    ]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
