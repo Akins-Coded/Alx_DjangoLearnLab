@@ -15,4 +15,10 @@ class Book(models.Model):
 
     def __str__(self):
         return f"{self.title} published in the year {self.publication_year} by {self.author} "
-    
+    class Meta:
+        permission = [
+            ("CreateView", 'Can Create'),
+            ("UpdateView", "Can Update"),
+            ("DeleteView", "Can Delete"),
+            
+        ]
