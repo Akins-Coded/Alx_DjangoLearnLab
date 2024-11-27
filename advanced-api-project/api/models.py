@@ -14,5 +14,5 @@ class Book(models.Model):
     Author = models.ForeignKey( Author , on_delete=models.CASCADE, related_name= 'books')
 
     def __str__(self):
-        return f"{self.title} published in the year {self.publication_year} by {self.Author}"
+        return f"{self.title} published in the year {self.publication_year} by {self.author} "
     
