@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class author(models.Model):
+class Author(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
 
@@ -11,7 +11,7 @@ class author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=50)
     publication_year = models.SmallIntegerField()
-    Author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name= 'books')
+    Author = models.ForeignKey( Author , on_delete=models.CASCADE, related_name= 'books')
 
     def __str__(self):
         return f"{self.title} published in the year {self.publication_year} by {self.Author}"
