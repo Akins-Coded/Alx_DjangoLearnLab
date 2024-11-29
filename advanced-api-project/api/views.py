@@ -9,8 +9,9 @@ class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]  # Read-only for all users
-    filter_backends = [filters.OrderingFilter] 
-    ordering_fields = ['title', 'author'] # Configuring Ordering fields to allow key-words from title or author
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter] 
+    search_fields = ['title', 'author'] # Configuring search to allow key-words from title or author
+    ordering_fields = ['title', 'author'] 
 
     def get_queryset(self):
         title = self.kwargs['title'] 
