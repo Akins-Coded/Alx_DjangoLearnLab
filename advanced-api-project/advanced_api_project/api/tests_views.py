@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.auth.models import User
-from .models import Book
+from ..models import Book
 
 class BookAPITestCase(TestCase):
     def setUp(self):
