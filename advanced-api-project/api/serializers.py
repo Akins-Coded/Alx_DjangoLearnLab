@@ -8,7 +8,7 @@ class BookSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Book
-        Field = "__all__"
+        Field =  ['id', 'title', 'author', 'publication_year']
 
     def validate_publication_year(self, value):
         current_year = date.today().year
@@ -21,6 +21,6 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Author
-        fields = ("first_name", "last_name", "books") 
+        fields = "__all__"
 
        
