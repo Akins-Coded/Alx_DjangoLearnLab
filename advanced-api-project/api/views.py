@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, filters  
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
@@ -8,7 +8,20 @@ class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]  # Read-only for all users
+    filter_backends = [filters.SearchFilter] 
+    search_fields = ['title', 'author'] # Configuring search to allow key-words from title or author
 
+    def get_queryset(self):
+        title = self.kwargs['title'] 
+        return Book.objects.filter(book__title=title)
+    
+    def get_queryset(self):
+        author = self.kwargs['author'] 
+        return Book.objects.filter(book__author=author)
+    
+    def get_queryset(self):
+        publication_year = self.kwargs['publication_year'] 
+        return Book.objects.filter(book__publication_year=publication_year)
 # DetailView: Retrieve a single book by ID
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()

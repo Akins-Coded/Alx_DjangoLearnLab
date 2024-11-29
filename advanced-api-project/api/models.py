@@ -8,17 +8,20 @@ class Author(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
     
+
+
 class Book(models.Model):
     title = models.CharField(max_length=50)
     publication_year = models.SmallIntegerField()
-    Author = models.ForeignKey( Author , on_delete=models.CASCADE, related_name= 'books')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')  # Use lowercase and ensure 'Author' is defined.
 
     def __str__(self):
-        return f"{self.title} published in the year {self.publication_year} by {self.author} "
+        return f"{self.title} published in the year {self.publication_year} by {self.author}"
+
     class Meta:
-        permission = [
-            ("CreateView", 'Can Create'),
+        permissions = [  
+            ("CreateView", "Can Create"),
             ("UpdateView", "Can Update"),
             ("DeleteView", "Can Delete"),
-            
-        ]
+            ]
+
