@@ -8,12 +8,13 @@ class BookAPITestCase(TestCase):
     def setUp(self):
         # Set up authenticated user
         self.client = APIClient()
+        self.client.login = APIClient()
         self.user = User.objects.create_user(username="testuser", password="password")
-        self.client.force_authenticate(user=self.user)
+        self.client.login(user=self.user)
 
         # Base URL for books API
         self.book_url = "/api/books/"
-
+    
     def test_create_book(self):
         data = {"title": "Test Book", "author": "Author Name", "publication_year": 2023}
         response = self.client.post(self.book_url, data)
