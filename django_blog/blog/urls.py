@@ -1,11 +1,11 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from . import views
+from .views import register, profile, search, PostByTagListView, PostViewSet, PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, CommentCreateView, CommentUpdateView, CommentDeleteView
 from rest_framework.routers import DefaultRouter
 
 # Registering the API viewset
 router = DefaultRouter()
-router.register(r'posts', views.PostViewSet)
+router.register(r'posts', PostViewSet)
 
 urlpatterns = [
     # API routes
@@ -16,19 +16,18 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='blog/logout.html'), name='logout'),
 
     # Registration 
-    path('register/', views.register, name='register'),
-    path('profile/', views.profile, name='profile'),
-    path('search/', views.search, name='search'),
-    path('tag/<slug:tag_slug>/', views.posts_by_tag, name='posts_by_tag'),
-
+    path('register/', register, name='register'),
+    path('profile/', profile, name='profile'),
+    path('search/', search, name='search'),
+    path("tags/<slug:tag_slug>/", PostByTagListView.as_view()),
     
-    path('', views.PostListView.as_view(), name='post-list'),
-    path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
-    path('post/new/', views.PostCreateView.as_view(), name='post-create'),
-    path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post-update'),
-    path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
+    path('', PostListView.as_view(), name='post-list'),
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('post/new/', PostCreateView.as_view(), name='post-create'),
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
 
-    path('post/<int:pk>/comments/new/', views.CommentCreateView.as_view(), name='comment_create'),
-    path('comment/<int:pk>/update/', views.CommentUpdateView.as_view(), name='comment_edit'),
-    path('comment/<int:pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
+    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='comment_create'),
+    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment_edit'),
+    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
 ]
