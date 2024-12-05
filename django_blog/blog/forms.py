@@ -17,7 +17,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'content', 'tags')  # Include the 'tags' field from the Post model
         widgets = {
-            'tags': TagWidget(attrs={'class': 'form-control'}),  # Use the appropriate widget for tags
+            'tags': TagWidget(),  # Use the appropriate widget for tags
         }
 
 
