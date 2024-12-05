@@ -1,12 +1,20 @@
-{% extends 'base.html' %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Posts</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
     <h1>Blog Posts</h1>
-    {% for post in posts %}
-        <article>
-            <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
-            <p>{{ post.content|truncatewords:30 }}</p>
-            <small>Published: {{ post.published_date }}</small>
-        </article>
-    {% endfor %}
-{% endblock %}
+    <ul>
+        {% for post in posts %}
+            <li>
+                <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                <p>{{ post.content|truncatechars:100 }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

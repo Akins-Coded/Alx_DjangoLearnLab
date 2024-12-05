@@ -12,10 +12,10 @@
     <form method="post">
         {% csrf_token %}
         <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" required><br><br>
+        <input type="text" id="username" name="username" value="{{ form.username.value|default:'' }}" required><br><br>
 
         <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+        <input type="email" id="email" name="email" value="{{ form.email.value|default:'' }}" required><br><br>
 
         <label for="password1">Password:</label><br>
         <input type="password" id="password1" name="password1" required><br><br>
@@ -31,13 +31,24 @@
         <button type="submit">Register</button>
     </form>
 
-    {% if form.errors %}
+    {% if errors %}
         <div class="errors">
             <h4>Errors:</h4>
             <ul>
+            {% for field, error in errors.items %}
+                <li>{{ field }}: {{ error }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="form-errors">
+            <h4>Form Errors:</h4>
+            <ul>
                 {% for field in form %}
                     {% for error in field.errors %}
-                        <li>{{ error }}</li>
+                        <li>{{ field.label }}: {{ error }}</li>
                     {% endfor %}
                 {% endfor %}
                 {% for error in form.non_field_errors %}
@@ -48,5 +59,6 @@
     {% endif %}
 
     <p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+    <script src="{% static 'js/scripts.js' %}"></script>
 </body>
 </html>

@@ -1,10 +1,17 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <h1>{{ view.title }}</h1>
-    <form method="post">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>{% if object %}Edit Post{% else %}New Post{% endif %}</title>
+</head>
+<body>
+    <h1>{% if object %}Edit Post{% else %}New Post{% endif %}</h1>
+    <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Save</button>
+        <input type="submit" value="Submit">
     </form>
-{% endblock %}
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
