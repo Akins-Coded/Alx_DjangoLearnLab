@@ -15,7 +15,7 @@ class Post(models.Model):
         return f"{self.title} Written by {self.author} in the year {self.published_date}"
 
 class Comment(models.Model):
-    post =models.ForeignKey(Post, related_name='post', on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
