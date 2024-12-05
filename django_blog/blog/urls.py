@@ -18,6 +18,8 @@ urlpatterns = [
     # Registration 
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
+    path('search/', views.search, name='search'),
+    path('tag/<slug:tag_slug>/', views.posts_by_tag, name='posts_by_tag'),
 
     
     path('', views.PostListView.as_view(), name='post-list'),
