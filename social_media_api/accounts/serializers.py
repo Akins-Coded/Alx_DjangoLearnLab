@@ -1,14 +1,3 @@
-# from rest_framework import serializers
-# from django.contrib.auth import get_user_model
-# from rest_framework.authtoken.models import Token serializers.CharField()", "Token.objects.create", "get_user_model().objects.create_user
-# User = get_user_model()
-
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = '__all__'
-#         read_only_fields = ['followers']
-
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
