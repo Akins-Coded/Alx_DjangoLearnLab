@@ -6,7 +6,7 @@ User = get_user_model()
 
 class CustomUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField()
-    token = serializers.CharField(read_only=True)
+    token = serializers.CharField()
 
     def create(self, validated_data):
         password = validated_data.pop('password')
