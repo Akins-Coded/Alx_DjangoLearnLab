@@ -3,7 +3,8 @@ from rest_framework.pagination import PageNumberPagination
 from .models import Post, Comment, Like
 from notifications.models import Notification
 from .serializers import PostSerializer, CommentSerializer
-from .utils import create_notification  # Assuming create_notification is defined elsewhere
+from rest_framework.response import Response
+
 
 
 def get_following_users(user):
@@ -105,6 +106,6 @@ class LikeViewSet(viewsets.ViewSet):
             return Response({'error': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
         like = Like.objects.create(user=user, post=post)
-        create_notification(user, post)
+        Notification.create_notification(user, post)
 
         return response({'message': 'Post liked successfully.'}, status=status.HTTP_201_CREATED)
