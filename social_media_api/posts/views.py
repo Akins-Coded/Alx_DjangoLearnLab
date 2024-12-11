@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, response, status
+from rest_framework import viewsets, permissions, response, status, views
 from rest_framework.pagination import PageNumberPagination
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
@@ -62,4 +62,20 @@ class CommentViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
-    
+
+class FeedViewSet(views.APIView):
+        permission_classes = [permissions.IsAuthenticated]
+
+        def get(self, request):
+            # Get the users the current user follows
+            followed_users = request.user.following.all()
+            # Get posts from followed users
+            posts = Post.objects.filter(author__in=followed_users).order_by('-created_at')
+            # Format the response data
+            post_data = [{
+                "id": post.id,
+                "content": post.content,
+                "created_at": post.created_at,
+                "author": post.author.username
+            } for post in posts]
+            return response(post_data)

@@ -8,4 +8,6 @@ router.register(r'posts/(?P<post_pk>\d+)/comments', views.CommentViewSet, basena
 
 urlpatterns = [
     path('', include(router.urls)),
+
+    path('feed/', views.FeedViewSet.as_view(), name='feed'),
 ]
