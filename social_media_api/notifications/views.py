@@ -5,8 +5,41 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework import generics
 
 User = get_user_model()
+
+def create_notification(actor, recipient, verb, post):
+    """
+    Creates a notification for the post's author when a user likes a post.
+
+    Args:
+        actor: The user who performed the action (liked the post).
+        recipient: The user who will receive the notification (the post's author).
+        verb: The action description (e.g., "liked your post").
+        post: The post that was liked.
+    """
+    # Create the ContentType for Post
+    content_type = ContentType.objects.get_for_model(Post)
+
+    # Check if a notification already exists for this like action
+    notification_exists = Notification.objects.filter(
+        recipient=recipient,
+        actor=actor,
+        verb=verb,
+        target_content_type=content_type,
+        target_object_id=post.id
+    ).exists()
+
+    if not notification_exists:
+        # Create the notification if it does not exist
+        Notification.objects.create(
+            recipient=recipient,
+            actor=actor,
+            verb=verb,
+            target_content_type=content_type,
+            target_object_id=post.id
+        )
 
 class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -18,9 +51,9 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=['post'])
     def like_post(self, request, *args, **kwargs):
-        # Get the post using the post_id passed in the request
+        # Get the post using generics.get_object_or_404 to safely fetch the post
         pk = request.data.get('post_id')  # Assuming post_id is passed
-        post = Post.objects.get(id=pk)  # Handle exception if post not found
+        post = generics.get_object_or_404(Post, pk=pk)  # Safe post retrieval
 
         # Create or retrieve the Like for the user and post
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -35,27 +68,8 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
         recipient = post.author
         verb = "liked your post"
 
-        # Create the ContentType for Post
-        content_type = ContentType.objects.get_for_model(Post)
-
-        # Check if a notification already exists for this like
-        notification_exists = Notification.objects.filter(
-            recipient=recipient,
-            actor=actor,
-            verb=verb,
-            target_content_type=content_type,
-            target_object_id=post.id
-        ).exists()
-
-        if not notification_exists:
-            # Create the notification if it does not exist
-            Notification.objects.create(
-                recipient=recipient,
-                actor=actor,
-                verb=verb,
-                target_content_type=content_type,
-                target_object_id=post.id
-            )
+        # Call the create_notification function to handle notification creation
+        create_notification(actor, recipient, verb, post)
 
         # Return the notification response
         return Response({
