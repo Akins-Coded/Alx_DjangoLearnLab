@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, response, status, views
 from rest_framework.pagination import PageNumberPagination
-from .models import Post, Comment
+from .models import Post, Comment, Like
+from notifications.models import Notification
 from .serializers import PostSerializer, CommentSerializer
 
 
@@ -79,3 +80,18 @@ class FeedViewSet(views.APIView):
                 "author": post.author.username
             } for post in posts]
             return response(post_data)
+        
+class LikeViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, pk=None):
+        user = request.user
+        post = Post.objects.get(pk=pk)
+
+        if Like.objects.filter(user=user, post=post).exists():
+            return response({'error': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        like = Like.objects.create(user=user, post=post)
+        create_notification(user, post)  # Function to create notification
+
+        return response({'message': 'Post liked successfully.'}, status=status.HTTP_201_CREATED)

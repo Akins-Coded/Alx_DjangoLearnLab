@@ -10,4 +10,11 @@ urlpatterns = [
     path('', include(router.urls)),
 
     path('feed/', views.FeedViewSet.as_view(), name='feed'),
+
+    path('<int:pk>/like/', views.LikeViewSet.as_view({'post': 'create'}), name='like_post'),
+    path('<int:pk>/unlike/', views.LikeViewSet.as_view({'post': 'destroy'}), name='unlike_post'),
+
+]
+urlpatterns = [
+    path('', views.NotificationViewSet.as_view({'get': 'list'}), name='get_notifications'),
 ]
