@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework import generics
 
 User = get_user_model()
 
@@ -19,9 +18,9 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=['post'])
     def like_post(self, request, *args, **kwargs):
-        # Get the post using generics.get_object_or_404
+        # Get the post using the post_id passed in the request
         pk = request.data.get('post_id')  # Assuming post_id is passed
-        post = generics.get_object_or_404(Post, pk=pk)
+        post = Post.objects.get(id=pk)  # Handle exception if post not found
 
         # Create or retrieve the Like for the user and post
         like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -39,23 +38,32 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
         # Create the ContentType for Post
         content_type = ContentType.objects.get_for_model(Post)
 
-        # Create the notification
-        notification = Notification.objects.create(
+        # Check if a notification already exists for this like
+        notification_exists = Notification.objects.filter(
             recipient=recipient,
             actor=actor,
             verb=verb,
             target_content_type=content_type,
             target_object_id=post.id
-        )
+        ).exists()
+
+        if not notification_exists:
+            # Create the notification if it does not exist
+            Notification.objects.create(
+                recipient=recipient,
+                actor=actor,
+                verb=verb,
+                target_content_type=content_type,
+                target_object_id=post.id
+            )
 
         # Return the notification response
         return Response({
             "message": "Notification created successfully",
             "notification": {
-                "recipient": notification.recipient.username,
-                "actor": notification.actor.username,
-                "verb": notification.verb,
-                "timestamp": notification.timestamp,
+                "recipient": recipient.username,
+                "actor": actor.username,
+                "verb": verb,
+                "timestamp": Notification.objects.filter(recipient=recipient).latest('timestamp').timestamp,
             }
         })
-
