@@ -3,6 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from .models import Post, Comment, Like
 from notifications.models import Notification
 from .serializers import PostSerializer, CommentSerializer
+from .utils import create_notification  # Assuming create_notification is defined elsewhere
 
 
 def get_following_users(user):
@@ -80,18 +81,30 @@ class FeedViewSet(views.APIView):
                 "author": post.author.username
             } for post in posts]
             return response(post_data)
-        
+
+
 class LikeViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, pk=None):
+        """
+        Likes a post for the currently authenticated user.
+
+        Returns a 400 error if the user already liked the post.
+        Returns a 201 Created response on successful like.
+        """
+
         user = request.user
-        post = Post.objects.get(pk=pk)
+
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         if Like.objects.filter(user=user, post=post).exists():
-            return response({'error': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
         like = Like.objects.create(user=user, post=post)
-        create_notification(user, post)  # Function to create notification
+        create_notification(user, post)
 
         return response({'message': 'Post liked successfully.'}, status=status.HTTP_201_CREATED)
