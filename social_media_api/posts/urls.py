@@ -15,6 +15,3 @@ urlpatterns = [
     path('<int:pk>/unlike/', views.LikeViewSet.as_view({'post': 'destroy'}), name='unlike_post'),
 
 ]
-urlpatterns = [
-    path('', views.NotificationViewSet.as_view({'get': 'list'}), name='get_notifications'),
-]

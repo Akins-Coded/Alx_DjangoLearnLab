@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework import generics
 
 User = get_user_model()
 
@@ -17,17 +18,21 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
         return self.queryset.filter(recipient=user).order_by('-timestamp')
 
     @action(detail=False, methods=['post'])
-    def like_post(self, request):
-        # Get the user and post from the request data
-        user = request.user
-        post_id = request.data.get('post_id')  # Assuming post_id is passed
-        post = Post.objects.get(id=post_id)  # Handle exception if post not found
+    def like_post(self, request, *args, **kwargs):
+        # Get the post using generics.get_object_or_404
+        pk = request.data.get('post_id')  # Assuming post_id is passed
+        post = generics.get_object_or_404(Post, pk=pk)
 
-        # Create the Like
-        like = Like.objects.create(user=user, post=post)
+        # Create or retrieve the Like for the user and post
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if not created:
+            return Response({
+                "message": "You have already liked this post."
+            }, status=400)
 
         # Create the notification for the post's author
-        actor = user
+        actor = request.user
         recipient = post.author
         verb = "liked your post"
 
@@ -53,3 +58,4 @@ class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
                 "timestamp": notification.timestamp,
             }
         })
+
