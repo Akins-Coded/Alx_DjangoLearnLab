@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, response, status, views
+from rest_framework import viewsets, permissions, response, status, views, generics
 from rest_framework.pagination import PageNumberPagination
 from .models import Post, Comment, Like
 from notifications.models import Notification
@@ -97,15 +97,14 @@ class LikeViewSet(viewsets.ViewSet):
 
         user = request.user
 
-        try:
-            post = Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            return Response({'error': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
+        post = generics.get_object_or_404(Post, pk=pk)
+       
 
         if Like.objects.filter(user=user, post=post).exists():
             return Response({'error': 'You already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        like = Like.objects.create(user=user, post=post)
-        Notification.create_notification(user, post)
+        like = Like.objects.get_or_create(user=request.user, post=post)
+        Notification.objects.create()
+        
 
         return response({'message': 'Post liked successfully.'}, status=status.HTTP_201_CREATED)
